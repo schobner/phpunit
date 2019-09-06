@@ -29,7 +29,7 @@ use PHPUnit\Framework\MockObject\Stub\Stub;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class InvocationMocker implements MethodNameMatch
+final class InvocationMocker implements InvocationStubber, MethodNameMatch
 {
     /**
      * @var MatcherCollection
@@ -54,11 +54,6 @@ final class InvocationMocker implements MethodNameMatch
         $this->collection->addMatcher($this->matcher);
 
         $this->configurableMethods = $configurableMethods;
-    }
-
-    public function getMatcher(): Matcher
-    {
-        return $this->matcher;
     }
 
     public function id($id): self
@@ -92,9 +87,7 @@ final class InvocationMocker implements MethodNameMatch
         return $this->will($stub);
     }
 
-    /**
-     * @param mixed $reference
-     */
+    /** {@inheritDoc} */
     public function willReturnReference(&$reference): self
     {
         $stub = new ReturnReference($reference);
@@ -116,9 +109,7 @@ final class InvocationMocker implements MethodNameMatch
         return $this->will($stub);
     }
 
-    /**
-     * @param callable $callback
-     */
+    /** {@inheritDoc} */
     public function willReturnCallback($callback): self
     {
         $stub = new ReturnCallback($callback);
